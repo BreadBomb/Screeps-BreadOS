@@ -26,7 +26,7 @@ export class ErrorMapper {
    * @returns {string} The source-mapped stack trace
    */
   public static sourceMappedStackTrace(error: Error | string): string {
-    const stack: string = error instanceof Error ? (error.stack as string) : error;
+    const stack: string = error instanceof Error ? ((error ? error.stack : '') as string) : error;
     if (this.cache.hasOwnProperty(stack)) {
       return this.cache[stack];
     }
@@ -76,7 +76,7 @@ export class ErrorMapper {
         if (e instanceof Error) {
           if ("sim" in Game.rooms) {
             const message = `Source maps don't work in the simulator - displaying original error`;
-            console.log(`<span style='color:red'>${message}<br>${_.escape(e.stack)}</span>`);
+            console.log(`<span style='color:red'>${message}<br>${_.escape(e ? e.stack : '')}</span>`);
           } else {
             console.log(`<span style='color:red'>${_.escape(this.sourceMappedStackTrace(e))}</span>`);
           }

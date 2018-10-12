@@ -4,25 +4,24 @@ import {Logger} from "../utils/Logger";
 
 export class BirthManager {
 
-  public creepCountByRole(role: Roles): number {
-    return _.where(Game.creeps, (creep: Creep) => creep.memory.role === role).length
+  public static CreepCountByRole(role: Roles): number {
+    return _.filter(Game.creeps, (creep: Creep) => creep.memory.role === role).length
   }
 
-  public createCreep<T extends CreepRoleBase>(creep: new (n: string) => T): CreepRoleBase {
+  public static CreateCreep(creepRole: Roles) {
     const name = Math.round(Math.random() * 100);
-    const c = new creep(name + "");
+    Logger.debug('creep', creepRole);
 
-    const code = Game.spawns.Spawn1.spawnCreep([WORK, CARRY, MOVE], c.Role + "-" + Math.round(Math.random() * 100), {
+    const code = Game.spawns.Spawn1.spawnCreep([WORK, CARRY, MOVE, MOVE], creepRole + "-" + Math.round(Math.random() * 100), {
       memory: {
-        role: c.Role,
+        role: creepRole,
       } as any
     });
     if (code === OK) {
-      Logger.success(c.Role, "Creep successfully generated");
+      Logger.success(creepRole, "Creep successfully generated");
     } else {
-      Logger.danger(c.Role, "Error spawning new creep, " + code);
+      Logger.danger(creepRole, "Error spawning new creep, " + code);
     }
-    return c;
   }
 
 }

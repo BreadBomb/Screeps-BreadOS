@@ -1,17 +1,13 @@
+import { Actions } from "../actions/Actions";
+import { CreepAction } from "../actions/IAction";
 import { Roles } from "../enums/Roles";
 import {Logger} from "../utils/Logger";
-
-export interface CreepAction {
-  Action: any;
-  Statement: () => boolean,
-  IsCompleted: () => boolean
-}
 
 export class CreepRoleBase {
   // @ts-ignore
   public Creep: Creep;
 
-  protected Actions: CreepAction[] = [];
+  protected Actions: Map<Actions, CreepAction> = new Map<Actions, CreepAction>();
 
   public set ActionSchedule(actions: CreepAction[]) {
     this.Creep.memory.actions = actions;
@@ -25,8 +21,9 @@ export class CreepRoleBase {
     return creep.memory.initialized === null ||creep.memory.initialized === undefined;
   }
 
-  public get Role(): Roles {
-    throw Logger.danger("You're using it wrong.");
+  public static get Role(): Roles | null {
+    Logger.danger('Creep', "You're using it wrong.");
+    return null;
   }
 
   public initCreep(creep: Creep): void {

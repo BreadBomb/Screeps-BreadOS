@@ -7,6 +7,16 @@ interface CreepMemory {
   room: string;
   actions: any[];
   initialized: boolean;
+  activeStructure: any;
+}
+
+interface RoomMemory {
+  sources: Array<{x: number, y: number}>;
+  initialized: boolean;
+}
+
+interface SpawnMemory {
+  defenderIndex: any;
 }
 
 interface Memory {
