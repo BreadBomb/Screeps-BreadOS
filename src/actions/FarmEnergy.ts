@@ -10,7 +10,7 @@ export const FarmEnergy: CreepAction = {
 };
 
 export function RunFarmEnergy(creep: Creep) {
-    const target = creep.pos.findClosestByRange(FIND_SOURCES);
+    const target = creep.pos.findClosestByRange(FIND_SOURCES, {filter: x => x.energy > 0});
     if (target !== null && creep.harvest(target) === ERR_NOT_IN_RANGE) {
       creep.moveTo(target, {reusePath: 5, visualizePathStyle: {stroke: '#B294BB'}})
     }

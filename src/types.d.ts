@@ -17,6 +17,7 @@ interface RoomMemory {
 
 interface SpawnMemory {
   defenderIndex: any;
+  birthRetry: number;
 }
 
 interface Memory {

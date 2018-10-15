@@ -1,10 +1,10 @@
+import { Logger } from "../utils/Logger";
 import { Actions } from "./Actions";
 import { CreepAction } from "./IAction";
-import { Logger } from "../utils/Logger";
 
 export const GetEnergy: CreepAction = {
   Action: Actions.GetEnergy,
-  Condition: (creep: Creep) => creep.carry.energy < creep.carryCapacity,
+  Condition: (creep: Creep) => creep.carry.energy < creep.carryCapacity && Game.spawns.Spawn1.memory.birthRetry === 0,
   IsCompleted: (creep: Creep) => {
     Logger.debug("dawd", creep.room.energyAvailable);
     return creep.carry.energy === creep.carryCapacity || creep.room.energyAvailable === 0;

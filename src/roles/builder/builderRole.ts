@@ -1,8 +1,7 @@
 import { Actions } from "../../actions/Actions";
 import { BuildStructure, RunBuildStructure } from "../../actions/BuildStructure";
-import { FarmEnergy, RunFarmEnergy } from "../../actions/FarmEnergy";
 import { GetEnergy, RunGetEnergy } from "../../actions/GetEnergy";
-import { CreepAction } from "../../actions/IAction";
+import { RepairStructure, RunRepairStructure } from "../../actions/RepairStructure";
 import { RunUpgradeController, UpgradeController } from "../../actions/UpgradeController";
 import { Roles } from "../../enums/Roles";
 import { Logger } from "../../utils/Logger";
@@ -15,8 +14,9 @@ export class BuilderRole extends CreepRoleBase {
 
   constructor() {
     super();
-    this.Actions.set(Actions.GetEnergy, GetEnergy);
     this.Actions.set(Actions.BuildStructure, BuildStructure);
+    this.Actions.set(Actions.RepairStructure, RepairStructure);
+    this.Actions.set(Actions.GetEnergy, GetEnergy);
     this.Actions.set(Actions.UpgradeController, UpgradeController);
   }
 
@@ -35,6 +35,11 @@ export class BuilderRole extends CreepRoleBase {
       return;
     }
 
+    if (creep.room.controller!.ticksToDowngrade < 5000) {
+      this.ActionSchedule.unshift(UpgradeController);
+      this.ActionSchedule.unshift(GetEnergy);
+    }
+
     if (this.IsActionCompleted()) {
       Logger.debug("creep", "action completed");
       this.RemoveFirstAction()
@@ -42,6 +47,10 @@ export class BuilderRole extends CreepRoleBase {
 
     if (this.ActionSchedule.length === 0) {
       this.GetNextAction();
+    }
+
+    if (this.ActionSchedule.length === 0) {
+      return;
     }
 
     if (this.ActionSchedule[0].Action === Actions.GetEnergy) {
@@ -55,10 +64,14 @@ export class BuilderRole extends CreepRoleBase {
     if (this.ActionSchedule[0].Action === Actions.UpgradeController) {
       RunUpgradeController(this.Creep);
     }
+
+    if (this.ActionSchedule[0].Action === Actions.RepairStructure) {
+      RunRepairStructure(this.Creep);
+    }
   }
 
   private GetNextAction() {
-    for (let action of this.Actions.values()) {
+    for (const action of this.Actions.values()) {
       if (action.Condition(this.Creep)) {
         this.ActionSchedule.push(action);
         Logger.debug('builder', action);
@@ -69,7 +82,6 @@ export class BuilderRole extends CreepRoleBase {
 
   private IsActionCompleted(): boolean {
     if (this.ActionSchedule.length === 0) { return false; }
-    Logger.debug("builer", this.Actions.get(this.ActionSchedule[0].Action)!.IsCompleted(this.Creep));
     return this.Actions.get(this.ActionSchedule[0].Action)!.IsCompleted(this.Creep);
   }
 

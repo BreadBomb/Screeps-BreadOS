@@ -1,3 +1,4 @@
+import { Roles } from "../enums/Roles";
 import { Actions } from "./Actions";
 import { CreepAction } from "./IAction";
 
@@ -5,7 +6,7 @@ export const UpgradeController: CreepAction = {
   Action: Actions.UpgradeController,
   Condition: (creep: Creep) => creep.carry.energy > 0,
   IsCompleted: (creep: Creep) => {
-    return creep.carry.energy === 0 || getEnergyTransferTargets(creep).length > 0
+    return creep.carry.energy === 0 || getEnergyTransferTargets(creep).length > 0 && creep.memory.role !== Roles.Builder
   }
 };
 

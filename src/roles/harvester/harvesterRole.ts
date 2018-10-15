@@ -43,8 +43,6 @@ export class HarvesterRole extends CreepRoleBase {
       this.GetNextAction();
     }
 
-    Logger.debug('harvester', this.ActionSchedule[0]);
-
     if (this.ActionSchedule[0].Action === Actions.FarmEnergy) {
       RunFarmEnergy(this.Creep);
     }

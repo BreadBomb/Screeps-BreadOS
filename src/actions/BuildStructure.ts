@@ -5,7 +5,7 @@ export const BuildStructure: CreepAction = {
   Action: Actions.BuildStructure,
   Condition: (creep: Creep) => creep.room.find(FIND_MY_CONSTRUCTION_SITES).length > 0 && creep.carry.energy > 0,
   IsCompleted: (creep: Creep) => {
-    return (creep.memory.activeStructure ? Game.getObjectById<ConstructionSite>(creep.memory.activeStructure)!.progress === Game.getObjectById<ConstructionSite>(creep.memory.activeStructure)!.progressTotal : true) ||
+    return (creep.memory.activeStructure && Game.getObjectById(creep.memory.activeStructure) ? Game.getObjectById<ConstructionSite>(creep.memory.activeStructure)!.progress === Game.getObjectById<ConstructionSite>(creep.memory.activeStructure)!.progressTotal : true) ||
       creep.carry.energy === 0;
   }
 };
